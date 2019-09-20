@@ -5,30 +5,26 @@ with open("requirements.txt", "r") as fs:
     reqs = [r for r in fs.read().splitlines() if (len(r) > 0 and not r.startswith("#"))]
 
 
-__author__ = "David Barroso <dbarrosop@dravetech.com>"
+__author__ = "Kirk Byers <ktbyers@twb-tech.com>"
 
 setup(
-    name="napalm",
-    version="2.4.0",
+    name="incendio",
+    version="3.0.0",
     packages=find_packages(exclude=("test*",)),
     test_suite="test_base",
     author="David Barroso, Kirk Byers, Mircea Ulinic",
     author_email="dbarrosop@dravetech.com, ping@mirceaulinic.net, ktbyers@twb-tech.com",
-    description="Network Automation and Programmability Abstraction Layer with Multivendor support",
+    description="NAPALM but just for config"
     classifiers=[
         "Topic :: Utilities",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.4",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Operating System :: POSIX :: Linux",
         "Operating System :: MacOS",
     ],
-    url="https://github.com/napalm-automation/napalm",
+    url="https://github.com/ktbyers/incendio",
     include_package_data=True,
     install_requires=reqs,
     entry_points={
