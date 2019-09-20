@@ -124,7 +124,6 @@ class EOSDriver(NetworkDriver):
         }
 
     def open(self):
-        """Implementation of NAPALM method open."""
         try:
             connection = self.transport_class(
                 host=self.hostname,
@@ -147,7 +146,6 @@ class EOSDriver(NetworkDriver):
             raise ConnectionException(py23_compat.text_type(ce))
 
     def close(self):
-        """Implementation of NAPALM method close."""
         self.discard_config()
 
     def is_alive(self):
@@ -226,7 +224,7 @@ class EOSDriver(NetworkDriver):
 
     def _load_config(self, filename=None, config=None, replace=True):
         if self.config_session is None:
-            self.config_session = "napalm_{}".format(datetime.now().microsecond)
+            self.config_session = "incendio_{}".format(datetime.now().microsecond)
 
         commands = []
         commands.append("configure session {}".format(self.config_session))
@@ -271,15 +269,12 @@ class EOSDriver(NetworkDriver):
                 raise MergeConfigException(msg)
 
     def load_replace_candidate(self, filename=None, config=None):
-        """Implementation of NAPALM method load_replace_candidate."""
         self._load_config(filename, config, True)
 
     def load_merge_candidate(self, filename=None, config=None):
-        """Implementation of NAPALM method load_merge_candidate."""
         self._load_config(filename, config, False)
 
     def compare_config(self):
-        """Implementation of NAPALM method compare_config."""
         if self.config_session is None:
             return ""
         else:
@@ -291,8 +286,6 @@ class EOSDriver(NetworkDriver):
             return result.strip()
 
     def commit_config(self, message=""):
-        """Implementation of NAPALM method commit_config."""
-
         if not self.lock_disable:
             self._lock()
         if message:
@@ -310,14 +303,12 @@ class EOSDriver(NetworkDriver):
         self.config_session = None
 
     def discard_config(self):
-        """Implementation of NAPALM method discard_config."""
         if self.config_session is not None:
             commands = ["configure session {}".format(self.config_session), "abort"]
             self.device.run_commands(commands)
             self.config_session = None
 
     def rollback(self):
-        """Implementation of NAPALM method rollback."""
         commands = ["configure replace flash:rollback-0", "write memory"]
         self.device.run_commands(commands)
 
