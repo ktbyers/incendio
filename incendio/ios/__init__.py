@@ -12,8 +12,7 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-"""napalm.ios package."""
-from napalm.ios.ios import IOSDriver
+from incendio.ios.ios import IOSDriver
 
 
 __all__ = ["IOSDriver"]
