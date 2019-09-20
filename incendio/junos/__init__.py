@@ -12,7 +12,7 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-"""napalm.junos package."""
-
 # Import local modules
-from napalm.junos.junos import JunOSDriver  # noqa
+from napalm.junos.junos import JunOSDriver
+
+__all__ = ("JunOSDriver",)
