@@ -14,7 +14,7 @@ setup(
     test_suite="test_base",
     author="David Barroso, Kirk Byers, Mircea Ulinic",
     author_email="dbarrosop@dravetech.com, ping@mirceaulinic.net, ktbyers@twb-tech.com",
-    description="NAPALM but just for config"
+    description="NAPALM but just for config",
     classifiers=[
         "Topic :: Utilities",
         "Programming Language :: Python",

@@ -13,18 +13,8 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-"""napalm.nxos package."""
+"""incendio.nxos package."""
 
-# Import stdlib
-import pkg_resources
+from incendio.nxos.nxos import NXOSDriver
 
-# Import local modules
-from napalm.nxos.nxos import NXOSDriver
-from napalm.nxos.nxos import NXOSDriverBase
-
-try:
-    __version__ = pkg_resources.get_distribution("napalm-nxos").version
-except pkg_resources.DistributionNotFound:
-    __version__ = "Not installed"
-
-__all__ = ("NXOSDriver", "NXOSDriverBase")
+__all__ = ("NXOSDriver",)
