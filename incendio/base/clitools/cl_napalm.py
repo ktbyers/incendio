@@ -3,8 +3,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 # import helpers
-from napalm.base import get_network_driver
-from napalm.base.clitools import helpers
+from incendio.base import get_network_driver
+from incendio.base.clitools import helpers
 
 # stdlib
 import json
