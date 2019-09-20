@@ -405,12 +405,6 @@ class NXOSDriver(NXOSDriverBase):
             commands = [command for command in commands.splitlines() if command]
         return self.device.config_list(commands)
 
-    def is_alive(self):
-        if self.device:
-            return {"is_alive": True}
-        else:
-            return {"is_alive": False}
-
     def _copy_run_start(self):
         results = self.device.save(filename="startup-config")
         if not results:
