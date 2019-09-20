@@ -13,14 +13,10 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-from __future__ import unicode_literals
-
-import socket
-
 # import stdlib
 from builtins import super
 
-# import NAPALM Base
+# import Incendio Base
 from incendio.base.exceptions import CommandErrorException, ReplaceConfigException
 from incendio.base.utils import py23_compat
 from incendio.nxos import NXOSDriverBase
