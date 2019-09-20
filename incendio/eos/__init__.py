@@ -13,6 +13,6 @@
 # the License.
 
 """napalm.eos package."""
-from napalm.eos.eos import EOSDriver
+from incendio.eos.eos import EOSDriver
 
 __all__ = ("EOSDriver",)
