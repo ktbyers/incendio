@@ -12,22 +12,17 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-"""napalm.base package."""
-
-# Python3 support
-from __future__ import print_function
-from __future__ import unicode_literals
+"""incendio.base package."""
 
 # Python std lib
 import inspect
 import importlib
 
-
-# NAPALM base
-from napalm.base.base import NetworkDriver
-from napalm.base.exceptions import ModuleImportError
-from napalm.base.mock import MockDriver
-from napalm.base.utils import py23_compat
+# Incendio base
+from incendio.base.base import NetworkDriver
+from incendio.base.exceptions import ModuleImportError
+from incendio.base.mock import MockDriver
+from incendio.base.utils import py23_compat
 
 __all__ = [
     "get_network_driver",  # export the function

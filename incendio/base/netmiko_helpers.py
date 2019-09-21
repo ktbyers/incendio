@@ -10,12 +10,12 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 from __future__ import unicode_literals
-from napalm.base.utils import py23_compat
+from incendio.base.utils import py23_compat
 from netmiko import BaseConnection
 
 
 def netmiko_args(optional_args):
-    """Check for Netmiko arguments that were passed in as NAPALM optional arguments.
+    """Check for Netmiko arguments that were passed in as optional arguments.
 
     Return a dictionary of these optional args  that will be passed into the Netmiko
     ConnectHandler call.
@@ -30,14 +30,14 @@ def netmiko_args(optional_args):
 
     netmiko_argument_map = dict(zip(args, defaults))
 
-    # Netmiko arguments that are integrated into NAPALM already
+    # Netmiko arguments that are integrated into Incendio already
     netmiko_filter = ["ip", "host", "username", "password", "device_type", "timeout"]
 
-    # Filter out all of the arguments that are integrated into NAPALM
+    # Filter out all of the arguments that are integrated into Incendio
     for k in netmiko_filter:
         netmiko_argument_map.pop(k)
 
-    # Check if any of these arguments were passed in as NAPALM optional_args
+    # Check if any of these arguments were passed in as NAPALM/Incendio optional_args
     netmiko_optional_args = {}
     for k, v in netmiko_argument_map.items():
         try:

@@ -2,7 +2,6 @@
 
 # std libs
 import os
-import re
 import sys
 import itertools
 
@@ -17,7 +16,6 @@ from netaddr import IPAddress
 import incendio.base.exceptions
 from incendio.base.utils.jinja_filters import CustomJinjaFilters
 from incendio.base.utils import py23_compat
-from incendio.base.canonical_map import base_interfaces, reverse_mapping
 
 
 # ----------------------------------------------------------------------------------------------------------------------

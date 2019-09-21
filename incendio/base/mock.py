@@ -12,13 +12,9 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-# Python3 support
-from __future__ import print_function
-from __future__ import unicode_literals
-
-from napalm.base.base import NetworkDriver
-from napalm.base.utils import py23_compat
-import napalm.base.exceptions
+from incendio.base.base import NetworkDriver
+from incendio.base.utils import py23_compat
+import incendio.base.exceptions
 
 import json
 import os
@@ -126,11 +122,13 @@ class MockDriver(NetworkDriver):
 
     def _raise_if_closed(self):
         if not self.opened:
-            raise napalm.base.exceptions.ConnectionClosedException("connection closed")
+            raise incendio.base.exceptions.ConnectionClosedException(
+                "connection closed"
+            )
 
     def open(self):
         if self.fail_on_open:
-            raise napalm.base.exceptions.ConnectionException("You told me to do this")
+            raise incendio.base.exceptions.ConnectionException("You told me to do this")
         self.opened = True
 
     def close(self):
