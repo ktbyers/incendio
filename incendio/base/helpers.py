@@ -1,8 +1,4 @@
-"""Helper functions for the NAPALM base."""
-
-# Python3 support
-from __future__ import print_function
-from __future__ import unicode_literals
+"""Helper functions for the Incendio base."""
 
 # std libs
 import os
@@ -16,13 +12,12 @@ import textfsm
 from netaddr import EUI
 from netaddr import mac_unix
 from netaddr import IPAddress
-from ciscoconfparse import CiscoConfParse
 
 # local modules
-import napalm.base.exceptions
-from napalm.base.utils.jinja_filters import CustomJinjaFilters
-from napalm.base.utils import py23_compat
-from napalm.base.canonical_map import base_interfaces, reverse_mapping
+import incendio.base.exceptions
+from incendio.base.utils.jinja_filters import CustomJinjaFilters
+from incendio.base.utils import py23_compat
+from incendio.base.canonical_map import base_interfaces, reverse_mapping
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -92,7 +87,7 @@ def load_template(
             )
         configuration = template.render(**template_vars)
     except jinja2.exceptions.TemplateNotFound:
-        raise napalm.base.exceptions.TemplateNotImplemented(
+        raise incendio.base.exceptions.TemplateNotImplemented(
             "Config template {template_name}.j2 not found in search path: {sp}".format(
                 template_name=template_name, sp=search_path
             )
@@ -101,73 +96,12 @@ def load_template(
         jinja2.exceptions.UndefinedError,
         jinja2.exceptions.TemplateSyntaxError,
     ) as jinjaerr:
-        raise napalm.base.exceptions.TemplateRenderException(
+        raise incendio.base.exceptions.TemplateRenderException(
             "Unable to render the Jinja config template {template_name}: {error}".format(
                 template_name=template_name, error=py23_compat.text_type(jinjaerr)
             )
         )
     return cls.load_merge_candidate(config=configuration)
-
-
-def cisco_conf_parse_parents(parent, child, config):
-    """
-    Use CiscoConfParse to find parent lines that contain a specific child line.
-
-    :param parent: The parent line to search for
-    :param child:  The child line required under the given parent
-    :param config: The device running/startup config
-    """
-    if type(config) == str:
-        config = config.splitlines()
-    parse = CiscoConfParse(config)
-    cfg_obj = parse.find_parents_w_child(parent, child)
-    return cfg_obj
-
-
-def cisco_conf_parse_objects(cfg_section, config):
-    """
-    Use CiscoConfParse to find and return a section of Cisco IOS config.
-    Similar to "show run | section <cfg_section>"
-
-    :param cfg_section: The section of the config to return eg. "router bgp"
-    :param config: The running/startup config of the device to parse
-    """
-    return_config = []
-    if type(config) is str:
-        config = config.splitlines()
-    parse = CiscoConfParse(config)
-    cfg_obj = parse.find_objects(cfg_section)
-    for parent in cfg_obj:
-        return_config.append(parent.text)
-        for child in parent.all_children:
-            return_config.append(child.text)
-    return return_config
-
-
-def regex_find_txt(pattern, text, default=""):
-    """""
-    RegEx search for pattern in text. Will try to match the data type of the "default" value
-    or return the default value if no match is found.
-    This is to parse IOS config like below:
-    regex_find_txt(r"remote-as (65000)", "neighbor 10.0.0.1 remote-as 65000", default=0)
-    RETURNS: 65001
-
-    :param pattern: RegEx pattern to match on
-    :param text: String of text ot search for "pattern" in
-    :param default="": Default value and type to return on error
-    """
-    text = str(text)
-    value = re.findall(pattern, text)
-    try:
-        if not value:
-            raise Exception
-        if not isinstance(value, type(default)):
-            if isinstance(value, list) and len(value) == 1:
-                value = value[0]
-            value = type(default)(value)
-    except Exception:  # in case of any exception, returns default
-        value = default
-    return value
 
 
 def textfsm_extractor(cls, template_name, raw_text):
@@ -211,59 +145,17 @@ def textfsm_extractor(cls, template_name, raw_text):
         except IOError:  # Template not present in this class
             continue  # Continue up the MRO
         except textfsm.TextFSMTemplateError as tfte:
-            raise napalm.base.exceptions.TemplateRenderException(
+            raise incendio.base.exceptions.TemplateRenderException(
                 "Wrong format of TextFSM template {template_name}: {error}".format(
                     template_name=template_name, error=py23_compat.text_type(tfte)
                 )
             )
 
-    raise napalm.base.exceptions.TemplateNotImplemented(
+    raise incendio.base.exceptions.TemplateNotImplemented(
         "TextFSM template {template_name}.tpl is not defined under {path}".format(
             template_name=template_name, path=template_dir_path
         )
     )
-
-
-def find_txt(xml_tree, path, default=""):
-    """
-    Extracts the text value from an XML tree, using XPath.
-    In case of error, will return a default value.
-
-    :param xml_tree: the XML Tree object. Assumed is <type 'lxml.etree._Element'>.
-    :param path:     XPath to be applied, in order to extract the desired data.
-    :param default:  Value to be returned in case of error.
-    :return: a str value.
-    """
-    value = ""
-    try:
-        xpath_applied = xml_tree.xpath(path)  # will consider the first match only
-        if len(xpath_applied) and xpath_applied[0] is not None:
-            xpath_result = xpath_applied[0]
-            if isinstance(xpath_result, type(xml_tree)):
-                value = xpath_result.text.strip()
-            else:
-                value = xpath_result
-    except Exception:  # in case of any exception, returns default
-        value = default
-    return py23_compat.text_type(value)
-
-
-def convert(to, who, default=""):
-    """
-    Converts data to a specific datatype.
-    In case of error, will return a default value.
-
-    :param to:      datatype to be casted to.
-    :param who:     value to cast.
-    :param default: value to return in case of error.
-    :return: a str value.
-    """
-    if who is None:
-        return default
-    try:
-        return to(who)
-    except:  # noqa
-        return default
 
 
 def mac(raw):
@@ -330,93 +222,3 @@ def ip(addr, version=None):
     if version and addr_obj.version != version:
         raise ValueError("{} is not an ipv{} address".format(addr, version))
     return py23_compat.text_type(addr_obj)
-
-
-def as_number(as_number_val):
-    """Convert AS Number to standardized asplain notation as an integer."""
-    as_number_str = py23_compat.text_type(as_number_val)
-    if "." in as_number_str:
-        big, little = as_number_str.split(".")
-        return (int(big) << 16) + int(little)
-    else:
-        return int(as_number_str)
-
-
-def split_interface(intf_name):
-    """Split an interface name based on first digit, slash, or space match."""
-    head = intf_name.rstrip(r"/\0123456789. ")
-    tail = intf_name[len(head) :].lstrip()
-    return (head, tail)
-
-
-def canonical_interface_name(interface, addl_name_map=None):
-    """Function to return an interface's canonical name (fully expanded name).
-
-    Use of explicit matches used to indicate a clear understanding on any potential
-    match. Regex and other looser matching methods were not implmented to avoid false
-    positive matches. As an example, it would make sense to do "[P|p][O|o]" which would
-    incorrectly match PO = POS and Po = Port-channel, leading to a false positive, not
-    easily troubleshot, found, or known.
-
-    :param interface: The interface you are attempting to expand.
-    :param addl_name_map (optional): A dict containing key/value pairs that updates
-    the base mapping. Used if an OS has specific differences. e.g. {"Po": "PortChannel"} vs
-    {"Po": "Port-Channel"}
-    """
-
-    name_map = {}
-    name_map.update(base_interfaces)
-    interface_type, interface_number = split_interface(interface)
-
-    if isinstance(addl_name_map, dict):
-        name_map.update(addl_name_map)
-    # check in dict for mapping
-    if name_map.get(interface_type):
-        long_int = name_map.get(interface_type)
-        return long_int + py23_compat.text_type(interface_number)
-    # if nothing matched, return the original name
-    else:
-        return interface
-
-
-def abbreviated_interface_name(interface, addl_name_map=None, addl_reverse_map=None):
-    """Function to return an abbreviated representation of the interface name.
-
-    :param interface: The interface you are attempting to abbreviate.
-    :param addl_name_map (optional): A dict containing key/value pairs that updates
-    the base mapping. Used if an OS has specific differences. e.g. {"Po": "PortChannel"} vs
-    {"Po": "Port-Channel"}
-    :param addl_reverse_map (optional): A dict containing key/value pairs that updates
-    the reverse mapping. Used if an OS has specific differences. e.g. {"PortChannel": "Po"} vs
-    {"PortChannel": "po"}
-    """
-
-    name_map = {}
-    name_map.update(base_interfaces)
-    interface_type, interface_number = split_interface(interface)
-
-    if isinstance(addl_name_map, dict):
-        name_map.update(addl_name_map)
-
-    rev_name_map = {}
-    rev_name_map.update(reverse_mapping)
-
-    if isinstance(addl_reverse_map, dict):
-        rev_name_map.update(addl_reverse_map)
-
-    # Try to ensure canonical type.
-    if name_map.get(interface_type):
-        canonical_type = name_map.get(interface_type)
-    else:
-        canonical_type = interface_type
-
-    try:
-        abbreviated_name = rev_name_map[canonical_type] + py23_compat.text_type(
-            interface_number
-        )
-        return abbreviated_name
-    except KeyError:
-        pass
-
-    # If abbreviated name lookup fails, return original name
-    return interface

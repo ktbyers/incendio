@@ -13,8 +13,6 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-from __future__ import unicode_literals
-
 import json
 import os
 import tempfile
@@ -23,16 +21,13 @@ import uuid
 # import stdlib
 from builtins import super
 
+# import third party lib
+from requests.exceptions import ConnectionError
 from netmiko import file_transfer
 from nxapi_plumbing import Device as NXOSDevice
 from nxapi_plumbing import NXAPIAuthError, NXAPIConnectionError
 
-# import third party lib
-from requests.exceptions import ConnectionError
-
-import incendio.base.constants as c
-
-# import NAPALM Base
+# import Incendio Base
 from incendio.base import NetworkDriver
 from incendio.base.exceptions import CommandErrorException
 from incendio.base.exceptions import ConnectionException
@@ -40,6 +35,15 @@ from incendio.base.exceptions import MergeConfigException
 from incendio.base.exceptions import ReplaceConfigException
 from incendio.base.netmiko_helpers import netmiko_args
 from incendio.base.utils import py23_compat
+
+NETMIKO_MAP = {
+    "ios": "cisco_ios",
+    "nxos": "cisco_nxos",
+    "nxos_ssh": "cisco_nxos",
+    "iosxr": "cisco_iosxr",
+    "eos": "arista_eos",
+    "junos": "juniper_eos",
+}
 
 
 def ensure_netmiko_conn(func):
@@ -51,7 +55,7 @@ def ensure_netmiko_conn(func):
             if netmiko_object is None:
                 raise AttributeError()
         except AttributeError:
-            device_type = c.NETMIKO_MAP[self.platform]
+            device_type = NETMIKO_MAP[self.platform]
             netmiko_optional_args = self.netmiko_optional_args
             if "port" in netmiko_optional_args:
                 netmiko_optional_args["port"] = 22
