@@ -1,4 +1,4 @@
-import incendio
+import incendio  # noqa
 
 
 def test_placeholder():
