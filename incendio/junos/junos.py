@@ -47,7 +47,6 @@ log = logging.getLogger(__file__)
 
 
 class JunOSDriver(NetworkDriver):
-
     def __init__(self, hostname, username, password, timeout=60, optional_args=None):
         self.hostname = hostname
         self.username = username

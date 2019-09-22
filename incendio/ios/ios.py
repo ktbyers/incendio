@@ -82,7 +82,6 @@ AFI_COMMAND_MAP = {
 
 
 class IOSDriver(NetworkDriver):
-
     def __init__(self, hostname, username, password, timeout=60, optional_args=None):
         if optional_args is None:
             optional_args = {}
