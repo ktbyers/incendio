@@ -13,6 +13,6 @@
 # the License.
 
 # Import local modules
-from napalm.junos.junos import JunOSDriver
+from incendio.junos.junos import JunOSDriver
 
 __all__ = ("JunOSDriver",)

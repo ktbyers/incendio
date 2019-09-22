@@ -259,7 +259,7 @@ class NXOSDriverBase(NetworkDriver):
         self._send_command_list(commands)
 
     def _get_checkpoint_file(self):
-        filename = "temp_cp_file_from_napalm"
+        filename = "temp_cp_file_from_incendio"
         self._set_checkpoint(filename)
         command = "show file {}".format(filename)
         output = self._send_command(command, raw_text=True)

@@ -47,21 +47,8 @@ log = logging.getLogger(__file__)
 
 
 class JunOSDriver(NetworkDriver):
-    """JunOSDriver class - inherits NetworkDriver from napalm.base."""
 
     def __init__(self, hostname, username, password, timeout=60, optional_args=None):
-        """
-        Initialise JunOS driver.
-
-        Optional args:
-            * config_lock (True/False): lock configuration DB after the connection is established.
-            * lock_disable (True/False): force configuration lock to be disabled (for external lock
-                management).
-            * port (int): custom port
-            * key_file (string): SSH key file path
-            * keepalive (int): Keepalive interval
-            * ignore_warning (boolean): not generate warning exceptions
-        """
         self.hostname = hostname
         self.username = username
         self.password = password

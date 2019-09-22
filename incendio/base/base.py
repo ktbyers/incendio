@@ -116,7 +116,7 @@ class NetworkDriver(object):
 
     def pre_connection_tests(self):
         """
-        This is a helper function used by the cli tool cl_napalm_show_tech. Drivers
+        This is a helper function used by the cli tool cl_napalm. Drivers
         can override this method to do some tests, show information, enable debugging, etc.
         before a connection with the device is attempted.
         """
@@ -124,7 +124,7 @@ class NetworkDriver(object):
 
     def connection_tests(self):
         """
-        This is a helper function used by the cli tool cl_napalm_show_tech. Drivers
+        This is a helper function used by the cli tool cl_napalm. Drivers
         can override this method to do some tests, show information, enable debugging, etc.
         before a connection with the device has been successful.
         """
@@ -132,7 +132,7 @@ class NetworkDriver(object):
 
     def post_connection_tests(self):
         """
-        This is a helper function used by the cli tool cl_napalm_show_tech. Drivers
+        This is a helper function used by the cli tool cl_napalm. Drivers
         can override this method to do some tests, show information, enable debugging, etc.
         after a connection with the device has been closed successfully.
         """

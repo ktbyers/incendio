@@ -14,14 +14,14 @@ import inspect
 import json
 
 import pytest
-from napalm.base.test import helpers
-from napalm.base.test import models
-from napalm.base import NetworkDriver
+from incendio.base.test import helpers
+from incendio.base.test import models
+from incendio.base import NetworkDriver
 
 # text_type is 'unicode' for py2 and 'str' for py3
-from napalm.base.utils.py23_compat import text_type, argspec
+from incendio.base.utils.py23_compat import text_type, argspec
 
-from napalm.base.test import conftest
+from incendio.base.test import conftest
 
 
 def list_dicts_diff(prv, nxt):
@@ -136,7 +136,7 @@ class BaseTestGetters(object):
                 orig = getattr(NetworkDriver, attr)
                 orig_spec = argspec(orig)
             except AttributeError:
-                orig_spec = "Method does not exist in napalm.base"
+                orig_spec = "Method does not exist in incendio.base"
             func_spec = argspec(func)
             if orig_spec != func_spec:
                 errors[attr] = (orig_spec, func_spec)

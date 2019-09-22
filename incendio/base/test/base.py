@@ -12,17 +12,13 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-# Python3 support
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import difflib
-from napalm.base import exceptions
-from napalm.base.test import models
+from incendio.base import exceptions
+from incendio.base.test import models
 from unittest import SkipTest
 
 # text_type is 'unicode' for py2 and 'str' for py3
-from napalm.base.utils.py23_compat import text_type
+from incendio.base.utils.py23_compat import text_type
 
 
 class TestConfigNetworkDriver(object):

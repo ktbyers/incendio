@@ -1,4 +1,3 @@
-"""NAPALM Cisco IOS Handler."""
 # Copyright 2015 Spotify AB. All rights reserved.
 #
 # The contents of this file are licensed under the Apache License, Version 2.0
@@ -12,9 +11,6 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations under
 # the License.
-
-from __future__ import print_function
-from __future__ import unicode_literals
 
 import functools
 import os
@@ -86,10 +82,8 @@ AFI_COMMAND_MAP = {
 
 
 class IOSDriver(NetworkDriver):
-    """NAPALM Cisco IOS Handler."""
 
     def __init__(self, hostname, username, password, timeout=60, optional_args=None):
-        """NAPALM Cisco IOS Handler."""
         if optional_args is None:
             optional_args = {}
         self.hostname = hostname
@@ -115,7 +109,7 @@ class IOSDriver(NetworkDriver):
         # Control automatic execution of 'file prompt quiet' for file operations
         self.auto_file_prompt = optional_args.get("auto_file_prompt", True)
 
-        # Track whether 'file prompt quiet' has been changed by NAPALM.
+        # Track whether 'file prompt quiet' has been changed.
         self.prompt_quiet_changed = False
         # Track whether 'file prompt quiet' is known to be configured
         self.prompt_quiet_configured = None
@@ -717,7 +711,7 @@ class IOSDriver(NetworkDriver):
     @staticmethod
     def _send_command_postprocess(output):
         """
-        Cleanup actions on send_command() for NAPALM getters.
+        Cleanup actions on send_command().
 
         Remove "Load for five sec; one minute if in output"
         Remove "Time source is"
