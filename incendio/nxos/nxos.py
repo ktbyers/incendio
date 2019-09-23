@@ -309,14 +309,10 @@ class NXOSDriverBase(NetworkDriver):
 
         if retrieve.lower() in ("running", "all"):
             command = "show running-config{}".format(run_full)
-            config["running"] = str(
-                self._send_command(command, raw_text=True)
-            )
+            config["running"] = str(self._send_command(command, raw_text=True))
         if retrieve.lower() in ("startup", "all"):
             command = "show startup-config"
-            config["startup"] = str(
-                self._send_command(command, raw_text=True)
-            )
+            config["startup"] = str(self._send_command(command, raw_text=True))
         return config
 
     @staticmethod

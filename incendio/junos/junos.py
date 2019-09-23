@@ -378,9 +378,7 @@ class JunOSDriver(NetworkDriver):
                 )
             )
             raw_txt = self.device.cli(safe_command, warning=False)
-            cli_output[str(command)] = str(
-                _process_pipe(command, raw_txt)
-            )
+            cli_output[str(command)] = str(_process_pipe(command, raw_txt))
         return cli_output
 
     def get_config(self, retrieve="all", full=False):

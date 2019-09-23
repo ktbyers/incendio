@@ -137,9 +137,7 @@ class IOSXRDriver(NetworkDriver):
 
         for command in commands:
             try:
-                cli_output[str(command)] = str(
-                    self.device._execute_show(command)
-                )
+                cli_output[str(command)] = str(self.device._execute_show(command))
             except TimeoutError:
                 cli_output[
                     str(command)

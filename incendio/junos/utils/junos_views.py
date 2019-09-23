@@ -3,7 +3,7 @@ Load tables/views
 """
 import yaml
 import re
-from jnpr.junos.factory import loadyaml, FactoryLoader
+from jnpr.junos.factory import FactoryLoader
 from os.path import splitext
 
 

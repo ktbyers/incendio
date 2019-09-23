@@ -16,5 +16,6 @@
 """incendio.nxos package."""
 
 from incendio.nxos.nxos import NXOSDriver
+from incendio.nxos.nxos import NXOSDriverBase
 
-__all__ = ("NXOSDriver",)
+__all__ = ("NXOSDriver", "NXOSDriverBase")

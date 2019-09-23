@@ -141,13 +141,7 @@ peer_details = {
 
 arp_table = {"interface": str, "mac": str, "ip": str, "age": float}
 
-ipv6_neighbor = {
-    "interface": str,
-    "mac": str,
-    "ip": str,
-    "age": float,
-    "state": str,
-}
+ipv6_neighbor = {"interface": str, "mac": str, "ip": str, "age": float, "state": str}
 
 ntp_peer = {
     # will populate it in the future wit potential keys
@@ -197,12 +191,7 @@ route = {
     "protocol_attributes": dict,
 }
 
-snmp = {
-    "chassis_id": str,
-    "community": dict,
-    "contact": str,
-    "location": str,
-}
+snmp = {"chassis_id": str, "community": dict, "contact": str, "location": str}
 
 snmp_community = {"acl": str, "mode": str}
 
@@ -253,12 +242,7 @@ optics_state = {"instant": float, "avg": float, "min": float, "max": float}
 
 config = {"running": str, "startup": str, "candidate": str}
 
-network_instance = {
-    "name": str,
-    "type": str,
-    "state": dict,
-    "interfaces": dict,
-}
+network_instance = {"name": str, "type": str, "state": dict, "interfaces": dict}
 
 network_instance_state = {"route_distinguisher": str}
 
