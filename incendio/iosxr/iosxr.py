@@ -13,12 +13,6 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-# import third party libs
-from pyIOSXR import IOSXR
-from pyIOSXR.exceptions import ConnectError
-from pyIOSXR.exceptions import TimeoutError
-from pyIOSXR.exceptions import InvalidInputError
-
 # import Incendio base
 from incendio.base.netmiko_helpers import netmiko_args
 from incendio.base.base import NetworkDriver
@@ -26,6 +20,12 @@ from incendio.base.exceptions import ConnectionException
 from incendio.base.exceptions import MergeConfigException
 from incendio.base.exceptions import ReplaceConfigException
 from incendio.base.exceptions import CommandTimeoutException
+
+# import incendio pyIOSXR
+from incendio.pyIOSXR import IOSXR
+from incendio.pyIOSXR.exceptions import ConnectError
+from incendio.pyIOSXR.exceptions import TimeoutError
+from incendio.pyIOSXR.exceptions import InvalidInputError
 
 
 class IOSXRDriver(NetworkDriver):
