@@ -15,7 +15,6 @@ from netaddr import IPAddress
 # local modules
 import incendio.base.exceptions
 from incendio.base.utils.jinja_filters import CustomJinjaFilters
-from incendio.base.utils import py23_compat
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -42,12 +41,12 @@ def load_template(
 ):
     try:
         search_path = []
-        if isinstance(template_source, py23_compat.string_types):
+        if isinstance(template_source, str):
             template = jinja2.Template(template_source)
         else:
             if template_path is not None:
                 if (
-                    isinstance(template_path, py23_compat.string_types)
+                    isinstance(template_path, str)
                     and os.path.isdir(template_path)
                     and os.path.isabs(template_path)
                 ):
@@ -96,7 +95,7 @@ def load_template(
     ) as jinjaerr:
         raise incendio.base.exceptions.TemplateRenderException(
             "Unable to render the Jinja config template {template_name}: {error}".format(
-                template_name=template_name, error=py23_compat.text_type(jinjaerr)
+                template_name=template_name, error=str(jinjaerr)
             )
         )
     return cls.load_merge_candidate(config=configuration)
@@ -145,7 +144,7 @@ def textfsm_extractor(cls, template_name, raw_text):
         except textfsm.TextFSMTemplateError as tfte:
             raise incendio.base.exceptions.TemplateRenderException(
                 "Wrong format of TextFSM template {template_name}: {error}".format(
-                    template_name=template_name, error=py23_compat.text_type(tfte)
+                    template_name=template_name, error=str(tfte)
                 )
             )
 
@@ -190,7 +189,7 @@ def mac(raw):
         raw = "{flat_raw}{zeros_stuffed}".format(
             flat_raw=flat_raw, zeros_stuffed="0" * (12 - len(flat_raw))
         )
-    return py23_compat.text_type(EUI(raw, dialect=_MACFormat))
+    return str(EUI(raw, dialect=_MACFormat))
 
 
 def ip(addr, version=None):
@@ -219,4 +218,4 @@ def ip(addr, version=None):
     addr_obj = IPAddress(addr)
     if version and addr_obj.version != version:
         raise ValueError("{} is not an ipv{} address".format(addr, version))
-    return py23_compat.text_type(addr_obj)
+    return str(addr_obj)

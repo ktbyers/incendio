@@ -22,7 +22,6 @@ import importlib
 from incendio.base.base import NetworkDriver
 from incendio.base.exceptions import ModuleImportError
 from incendio.base.mock import MockDriver
-from incendio.base.utils import py23_compat
 
 __all__ = [
     "get_network_driver",  # export the function
@@ -65,7 +64,7 @@ def get_network_driver(name, prepend=True):
     if name == "mock":
         return MockDriver
 
-    if not (isinstance(name, py23_compat.string_types) and len(name) > 0):
+    if not (isinstance(name, str) and len(name) > 0):
         raise ModuleImportError("Please provide a valid driver name.")
 
     # Only lowercase allowed
@@ -96,7 +95,7 @@ def get_network_driver(name, prepend=True):
             module = importlib.import_module(module_name)
             break
         except ImportError as e:
-            message = py23_compat.text_type(e)
+            message = str(e)
             if "No module named" in message:
                 # py2 doesn't have ModuleNotFoundError exception
                 failed_module = message.split()[-1]
