@@ -35,7 +35,6 @@ from jnpr.junos.exception import UnlockError as JnrpUnlockError
 
 # import Incendio Base
 from incendio.base.base import NetworkDriver
-from incendio.base.utils import py23_compat
 from incendio.base.exceptions import ConnectionException
 from incendio.base.exceptions import MergeConfigException
 from incendio.base.exceptions import ReplaceConfigException
@@ -124,7 +123,7 @@ class JunOSDriver(NetworkDriver):
                 self.device.cu.lock()
                 self.locked = True
             except JnprLockError as jle:
-                raise LockError(py23_compat.text_type(jle))
+                raise LockError(str(jle))
 
     def _unlock(self):
         """Unlock the config DB."""
@@ -379,7 +378,7 @@ class JunOSDriver(NetworkDriver):
                 )
             )
             raw_txt = self.device.cli(safe_command, warning=False)
-            cli_output[py23_compat.text_type(command)] = py23_compat.text_type(
+            cli_output[str(command)] = str(
                 _process_pipe(command, raw_txt)
             )
         return cli_output
@@ -391,9 +390,9 @@ class JunOSDriver(NetworkDriver):
 
         if retrieve in ("candidate", "all"):
             config = self.device.rpc.get_config(filter_xml=None, options=options)
-            rv["candidate"] = py23_compat.text_type(config.text)
+            rv["candidate"] = str(config.text)
         if retrieve in ("running", "all"):
             options["database"] = "committed"
             config = self.device.rpc.get_config(filter_xml=None, options=options)
-            rv["running"] = py23_compat.text_type(config.text)
+            rv["running"] = str(config.text)
         return rv

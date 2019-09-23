@@ -34,7 +34,6 @@ from incendio.base.exceptions import ConnectionException
 from incendio.base.exceptions import MergeConfigException
 from incendio.base.exceptions import ReplaceConfigException
 from incendio.base.netmiko_helpers import netmiko_args
-from incendio.base.utils import py23_compat
 
 NETMIKO_MAP = {
     "ios": "cisco_ios",
@@ -294,7 +293,7 @@ class NXOSDriverBase(NetworkDriver):
     @staticmethod
     def _create_tmp_file(config):
         tmp_dir = tempfile.gettempdir()
-        rand_fname = py23_compat.text_type(uuid.uuid4())
+        rand_fname = str(uuid.uuid4())
         filename = os.path.join(tmp_dir, rand_fname)
         with open(filename, "wt") as fobj:
             fobj.write(config)
@@ -310,12 +309,12 @@ class NXOSDriverBase(NetworkDriver):
 
         if retrieve.lower() in ("running", "all"):
             command = "show running-config{}".format(run_full)
-            config["running"] = py23_compat.text_type(
+            config["running"] = str(
                 self._send_command(command, raw_text=True)
             )
         if retrieve.lower() in ("startup", "all"):
             command = "show startup-config"
-            config["startup"] = py23_compat.text_type(
+            config["startup"] = str(
                 self._send_command(command, raw_text=True)
             )
         return config
@@ -404,7 +403,7 @@ class NXOSDriver(NXOSDriverBase):
         return self.device.config_list(commands)
 
     def _send_config(self, commands):
-        if isinstance(commands, py23_compat.string_types):
+        if isinstance(commands, str):
             # Has to be a list generator and not generator expression (not JSON serializable)
             commands = [command for command in commands.splitlines() if command]
         return self.device.config_list(commands)
@@ -457,5 +456,5 @@ class NXOSDriver(NXOSDriverBase):
 
         for command in commands:
             command_output = self._send_command(command, raw_text=True)
-            cli_output[py23_compat.text_type(command)] = command_output
+            cli_output[str(command)] = command_output
         return cli_output

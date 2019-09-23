@@ -26,7 +26,6 @@ from incendio.base.exceptions import ConnectionException
 from incendio.base.exceptions import MergeConfigException
 from incendio.base.exceptions import ReplaceConfigException
 from incendio.base.exceptions import CommandTimeoutException
-from incendio.base.utils.py23_compat import text_type
 
 
 class IOSXRDriver(NetworkDriver):
@@ -138,16 +137,16 @@ class IOSXRDriver(NetworkDriver):
 
         for command in commands:
             try:
-                cli_output[text_type(command)] = text_type(
+                cli_output[str(command)] = str(
                     self.device._execute_show(command)
                 )
             except TimeoutError:
                 cli_output[
-                    text_type(command)
+                    str(command)
                 ] = 'Execution of command \
                     "{command}" took too long! Please adjust your params!'.format(
                     command=command
                 )
-                raise CommandTimeoutException(text_type(cli_output))
+                raise CommandTimeoutException(str(cli_output))
 
         return cli_output

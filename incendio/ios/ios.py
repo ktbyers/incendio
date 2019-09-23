@@ -30,7 +30,6 @@ from incendio.base.exceptions import (
     CommandErrorException,
 )
 from incendio.base.netmiko_helpers import netmiko_args
-from incendio.base.utils import py23_compat
 
 # Easier to store these as constants
 HOUR_SECONDS = 3600
@@ -203,7 +202,7 @@ class IOSDriver(NetworkDriver):
     def _create_tmp_file(config):
         """Write temp file and for use with inline config and SCP."""
         tmp_dir = tempfile.gettempdir()
-        rand_fname = py23_compat.text_type(uuid.uuid4())
+        rand_fname = str(uuid.uuid4())
         filename = os.path.join(tmp_dir, rand_fname)
         with open(filename, "wt") as fobj:
             fobj.write(config)
@@ -749,3 +748,27 @@ class IOSDriver(NetworkDriver):
         if self.device and self._dest_file_system is None:
             self._dest_file_system = self._discover_file_system()
         return self._dest_file_system
+
+    def get_config(self, retrieve="all", full=False):
+        """Implementation of get_config for IOS.
+        Returns the startup or/and running configuration as dictionary.
+        The keys of the dictionary represent the type of configuration
+        (startup or running). The candidate is always empty string,
+        since IOS does not support candidate configuration.
+        """
+
+        configs = {"startup": "", "running": "", "candidate": ""}
+        # IOS only supports "all" on "show run"
+        run_full = " all" if full else ""
+
+        if retrieve in ("startup", "all"):
+            command = "show startup-config"
+            output = self._send_command(command)
+            configs["startup"] = output
+
+        if retrieve in ("running", "all"):
+            command = "show running-config{}".format(run_full)
+            output = self._send_command(command)
+            configs["running"] = output
+
+        return configs

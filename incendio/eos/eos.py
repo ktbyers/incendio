@@ -16,6 +16,7 @@
 import re
 
 from datetime import datetime
+import inspect
 
 # third party libs
 import pyeapi
@@ -23,7 +24,6 @@ from pyeapi.eapilib import ConnectionError
 
 # Incendio base
 from incendio.base.base import NetworkDriver
-from incendio.base.utils import py23_compat
 from incendio.base.exceptions import (
     ConnectionException,
     MergeConfigException,
@@ -111,7 +111,7 @@ class EOSDriver(NetworkDriver):
             self.transport_class = pyeapi.client.TRANSPORTS[transport]
         except KeyError:
             raise ConnectionException("Unknown transport: {}".format(self.transport))
-        init_args = py23_compat.argspec(self.transport_class.__init__)[0]
+        init_args = inspect.getfullargspec(self.transport_class.__init__)[0]
         init_args.pop(0)  # Remove "self"
         init_args.append("enforce_verification")  # Not an arg for unknown reason
 
@@ -143,7 +143,7 @@ class EOSDriver(NetworkDriver):
             # and this is raised either if device not avaiable
             # either if HTTP(S) agent is not enabled
             # show management api http-commands
-            raise ConnectionException(py23_compat.text_type(ce))
+            raise ConnectionException(str(ce))
 
     def close(self):
         self.discard_config()
@@ -198,9 +198,7 @@ class EOSDriver(NetworkDriver):
         comment_count = 0
         for idx, element in enumerate(commands):
             # Check first for stringiness, as we may have dicts in the command list already
-            if isinstance(element, py23_compat.string_types) and element.startswith(
-                "!!"
-            ):
+            if isinstance(element, str) and element.startswith("!!"):
                 comment_count += 1
                 continue
             else:
@@ -262,7 +260,7 @@ class EOSDriver(NetworkDriver):
                 self.device.run_commands(commands)
         except pyeapi.eapilib.CommandError as e:
             self.discard_config()
-            msg = py23_compat.text_type(e)
+            msg = str(e)
             if replace:
                 raise ReplaceConfigException(msg)
             else:
@@ -320,23 +318,23 @@ class EOSDriver(NetworkDriver):
 
         for command in commands:
             try:
-                cli_output[py23_compat.text_type(command)] = self.device.run_commands(
+                cli_output[str(command)] = self.device.run_commands(
                     [command], encoding="text"
                 )[0].get("output")
                 # not quite fair to not exploit rum_commands
                 # but at least can have better control to point to wrong command in case of failure
             except pyeapi.eapilib.CommandError:
                 # for sure this command failed
-                cli_output[
-                    py23_compat.text_type(command)
-                ] = 'Invalid command: "{cmd}"'.format(cmd=command)
+                cli_output[str(command)] = 'Invalid command: "{cmd}"'.format(
+                    cmd=command
+                )
                 raise CommandErrorException(str(cli_output))
             except Exception as e:
                 # something bad happened
                 msg = 'Unable to execute command "{cmd}": {err}'.format(
                     cmd=command, err=e
                 )
-                cli_output[py23_compat.text_type(command)] = msg
+                cli_output[str(command)] = msg
                 raise CommandErrorException(str(cli_output))
 
         return cli_output

@@ -18,7 +18,6 @@ from builtins import super
 
 # import Incendio Base
 from incendio.base.exceptions import CommandErrorException, ReplaceConfigException
-from incendio.base.utils import py23_compat
 from incendio.nxos import NXOSDriverBase
 
 
@@ -58,7 +57,7 @@ class NXOSSSHDriver(NXOSDriverBase):
         return output
 
     def _send_config(self, commands):
-        if isinstance(commands, py23_compat.string_types):
+        if isinstance(commands, str):
             commands = (command for command in commands.splitlines() if command)
         return self.device.send_config_set(commands)
 
@@ -109,5 +108,5 @@ class NXOSSSHDriver(NXOSDriverBase):
 
         for command in commands:
             output = self._send_command(command)
-            cli_output[py23_compat.text_type(command)] = output
+            cli_output[str(command)] = output
         return cli_output
