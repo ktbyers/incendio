@@ -1,7 +1,3 @@
-# Python3 support
-from __future__ import print_function
-from __future__ import unicode_literals
-
 # import helpers
 from incendio.base import get_network_driver
 from incendio.base.clitools import helpers

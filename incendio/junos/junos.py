@@ -15,8 +15,6 @@
 
 """Driver for JunOS devices."""
 
-from __future__ import unicode_literals
-
 # import stdlib
 import re
 import json
