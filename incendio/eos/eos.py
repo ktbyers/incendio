@@ -338,3 +338,49 @@ class EOSDriver(NetworkDriver):
                 raise CommandErrorException(str(cli_output))
 
         return cli_output
+
+    def get_config(self, retrieve="all", full=False):
+        """get_config implementation for EOS."""
+        get_startup = retrieve == "all" or retrieve == "startup"
+        get_running = retrieve == "all" or retrieve == "running"
+        get_candidate = (
+            retrieve == "all" or retrieve == "candidate"
+        ) and self.config_session
+
+        # EOS only supports "all" on "show run"
+        run_full = " all" if full else ""
+
+        if retrieve == "all":
+            commands = ["show startup-config", "show running-config{}".format(run_full)]
+
+            if self.config_session:
+                commands.append(
+                    "show session-config named {}".format(self.config_session)
+                )
+
+            output = self.device.run_commands(commands, encoding="text")
+            return {
+                "startup": str(output[0]["output"]) if get_startup else "",
+                "running": str(output[1]["output"]) if get_running else "",
+                "candidate": str(output[2]["output"]) if get_candidate else "",
+            }
+        elif get_startup or get_running:
+            if retrieve == "running":
+                commands = ["show {}-config{}".format(retrieve, run_full)]
+            elif retrieve == "startup":
+                commands = ["show {}-config".format(retrieve)]
+            output = self.device.run_commands(commands, encoding="text")
+            return {
+                "startup": str(output[0]["output"]) if get_startup else "",
+                "running": str(output[0]["output"]) if get_running else "",
+                "candidate": "",
+            }
+        elif get_candidate:
+            commands = ["show session-config named {}".format(self.config_session)]
+            output = self.device.run_commands(commands, encoding="text")
+            return {"startup": "", "running": "", "candidate": str(output[0]["output"])}
+        elif retrieve == "candidate":
+            # If we get here it means that we want the candidate but there is none.
+            return {"startup": "", "running": "", "candidate": ""}
+        else:
+            raise Exception("Wrong retrieve filter: {}".format(retrieve))
