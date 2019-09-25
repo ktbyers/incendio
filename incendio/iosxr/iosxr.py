@@ -148,3 +148,22 @@ class IOSXRDriver(NetworkDriver):
                 raise CommandTimeoutException(str(cli_output))
 
         return cli_output
+
+    def get_config(self, retrieve="all", full=False):
+
+        config = {"startup": "", "running": "", "candidate": ""}  # default values
+        # IOS-XR only supports "all" on "show run"
+        run_full = " all" if full else ""
+
+        if retrieve.lower() in ["running", "all"]:
+            config["running"] = str(
+                self.device._execute_config_show(
+                    "show running-config{}".format(run_full)
+                )
+            )
+        if retrieve.lower() in ["candidate", "all"]:
+            config["candidate"] = str(
+                self.device._execute_config_show("show configuration merge")
+            )
+
+        return config
