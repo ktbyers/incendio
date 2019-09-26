@@ -1,11 +1,11 @@
 """
 Fork of pynxos library from network to code and mzbenami
 
-Reimplemented by ktbyers to support XML-RPC in addition to JSON-RPC
+Re-implemented by ktbyers to support XML-RPC in addition to JSON-RPC
 """
-from nxapi_plumbing.device import Device
-from nxapi_plumbing.api_client import RPCClient, XMLClient
-from nxapi_plumbing.errors import (
+from incendio.nxapi_plumbing.device import Device
+from incendio.nxapi_plumbing.api_client import RPCClient, XMLClient
+from incendio.nxapi_plumbing.errors import (
     NXAPIError,
     NXAPICommandError,
     NXAPIConnectionError,

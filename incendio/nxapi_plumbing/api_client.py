@@ -15,7 +15,7 @@ from lxml import etree
 
 from six import string_types
 
-from nxapi_plumbing.errors import (
+from incendio.nxapi_plumbing.errors import (
     NXAPIError,
     NXAPIPostError,
     NXAPICommandError,

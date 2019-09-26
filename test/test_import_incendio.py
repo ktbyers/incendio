@@ -6,6 +6,9 @@ from incendio.nxos_ssh.nxos_ssh import NXOSSSHDriver  # noqa
 from incendio.junos.junos import JunOSDriver  # noqa
 from incendio.iosxr.iosxr import IOSXRDriver  # noqa
 
+import incendio.nxapi_plumbing  # noqa
+import incendio.pyIOSXR  # noqa
+
 
 def test_placeholder():
     assert True

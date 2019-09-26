@@ -6,8 +6,8 @@ Reimplemented by ktbyers to support XML-RPC in addition to JSON-RPC
 
 from __future__ import print_function, unicode_literals
 
-from nxapi_plumbing.errors import NXAPIError, NXAPICommandError
-from nxapi_plumbing.api_client import RPCClient, XMLClient
+from incendio.nxapi_plumbing.errors import NXAPIError, NXAPICommandError
+from incendio.nxapi_plumbing.api_client import RPCClient, XMLClient
 
 
 class Device(object):
