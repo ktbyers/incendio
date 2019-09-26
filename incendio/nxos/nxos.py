@@ -24,8 +24,6 @@ from builtins import super
 # import third party lib
 from requests.exceptions import ConnectionError
 from netmiko import file_transfer
-from nxapi_plumbing import Device as NXOSDevice
-from nxapi_plumbing import NXAPIAuthError, NXAPIConnectionError
 
 # import Incendio Base
 from incendio.base import NetworkDriver
@@ -34,6 +32,9 @@ from incendio.base.exceptions import ConnectionException
 from incendio.base.exceptions import MergeConfigException
 from incendio.base.exceptions import ReplaceConfigException
 from incendio.base.netmiko_helpers import netmiko_args
+
+from incendio.nxapi_plumbing import Device as NXOSDevice
+from incendio.nxapi_plumbing import NXAPIAuthError, NXAPIConnectionError
 
 NETMIKO_MAP = {
     "ios": "cisco_ios",
