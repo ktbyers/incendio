@@ -608,13 +608,23 @@ class IOSXR(object):
 
         :return:  Config diff.
         """
-        _show_merge = self._execute_config_show("show configuration merge")
-        _show_run = self._execute_config_show("show running-config")
+        show_merge = self._execute_config_show("show configuration merge")
+        show_run = self._execute_config_show("show running-config")
+
+        show_merge = self.strip_config_header(show_merge)
+        show_run = self.strip_config_header(show_run)
 
         diff = difflib.unified_diff(
-            _show_run.splitlines(1)[2:-2], _show_merge.splitlines(1)[2:-2]
+            show_run.splitlines(keepends=True), show_merge.splitlines(keepends=True)
         )
         return "".join([x.replace("\r", "") for x in diff])
+
+    @staticmethod
+    def strip_config_header(config):
+        config = re.sub(r"^Building config.*\n!! IOS.*", "", config, flags=re.M)
+        config = config.strip()
+        config = re.sub(r"^!!.*", "", config)
+        return config.strip()
 
     def compare_replace_config(self):
         """
@@ -625,10 +635,12 @@ class IOSXR(object):
 
         :return:  Config diff.
         """
-
         diff = self._execute_config_show("show configuration changes diff")
-
-        return "".join(diff.splitlines(1)[2:-2])
+        # Strip header lines
+        diff = self.strip_config_header(diff)
+        # Strip trailer line
+        diff = re.sub(r"^end$", "", diff, flags=re.M)
+        return diff.strip()
 
     def commit_config(self, label=None, comment=None, confirmed=None):
         """
