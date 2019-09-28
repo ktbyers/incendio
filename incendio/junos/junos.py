@@ -31,6 +31,8 @@ from jnpr.junos.exception import ConnectTimeoutError
 from jnpr.junos.exception import LockError as JnprLockError
 from jnpr.junos.exception import UnlockError as JnrpUnlockError
 
+from ntc_rosetta import get_driver
+
 # import Incendio Base
 from incendio.base.base import NetworkDriver
 from incendio.base.exceptions import ConnectionException
@@ -44,7 +46,17 @@ log = logging.getLogger(__file__)
 
 
 class JunOSDriver(NetworkDriver):
-    def __init__(self, hostname, username, password, timeout=60, optional_args=None):
+    def __init__(
+        self,
+        hostname,
+        username,
+        password,
+        timeout=60,
+        rosetta_driver=None,
+        yang_model="openconfig",
+        optional_args=None,
+    ):
+
         self.hostname = hostname
         self.username = username
         self.password = password
@@ -91,6 +103,10 @@ class JunOSDriver(NetworkDriver):
 
         self.platform = "junos"
         self.profile = [self.platform]
+
+        self.yang_model = yang_model
+        self.rosetta_driver = rosetta_driver
+        self.rosetta = get_driver(rosetta_driver or self.platform, yang_model)()
 
     def open(self):
         """Open the connection with the device."""
