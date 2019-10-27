@@ -89,6 +89,7 @@ class IOSDriver(NetworkDriver):
         self.password = password
         self.timeout = timeout
 
+        self._napalm_conn = optional_args.get("_napalm_conn")
         self.transport = optional_args.get("transport", "ssh")
 
         # Retrieve file names
@@ -127,12 +128,15 @@ class IOSDriver(NetworkDriver):
 
     def open(self):
         """Open a connection to the device."""
-        device_type = "cisco_ios"
-        if self.transport == "telnet":
-            device_type = "cisco_ios_telnet"
-        self.device = self._netmiko_open(
-            device_type, netmiko_optional_args=self.netmiko_optional_args
-        )
+        if self._napalm_conn:
+            self.device = self._napalm_conn
+        else:
+            device_type = "cisco_ios"
+            if self.transport == "telnet":
+                device_type = "cisco_ios_telnet"
+            self.device = self._netmiko_open(
+                device_type, netmiko_optional_args=self.netmiko_optional_args
+            )
 
     def _discover_file_system(self):
         try:
